@@ -26,11 +26,13 @@ export default class App extends React.Component {
   };
 
   state = {
-    tasks: []
+    tasks: [],
+    page: 1,
+    flag: false
   }
 
   async componentWillMount() {
-    const tasks = await new MyStorage().load();
+    const tasks = await new MyStorage().load(this.state.page);
     this.setState({ tasks: tasks });
   }
 
@@ -50,6 +52,20 @@ export default class App extends React.Component {
 
   updateTasks = (tasks) => {
     this.setState({ tasks });
+  }
+
+  handleLoadMore = async () => {
+    if(!this.state.flag) {
+      const size = await new MyStorage().load(-1);
+      var number = size.length;
+      console.warn(number);
+      this.setState({flag: true});
+      this.setState({page: this.state.page + 1});
+      console.warn(this.state.page);
+      const tasks = await new MyStorage().load(this.state.page);
+      console.warn(tasks);
+      this.setState({ tasks: tasks, flag: false });
+    }
   }
 
 
@@ -90,6 +106,8 @@ export default class App extends React.Component {
               />
             )}
             keyExtractor={item => item.title}
+            onEndReached={this.handleLoadMore}
+            onEndReachedThreshold={1}
           />
         </List>
       </View>

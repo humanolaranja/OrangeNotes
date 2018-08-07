@@ -1,11 +1,19 @@
 import { AsyncStorage } from 'react-native';
 
 export default class MyStorage {
-  load = async () => {
+  load = async (page_number) => {
     const currentData = JSON.parse(
       await AsyncStorage.getItem('storedTasks')
     );
-    return (currentData == (undefined || null) ? [] : currentData);
+    if(page_number > 0) {
+      page_size = 15;
+      --page_number;
+      var newData = currentData.slice(page_number * page_size, (page_number + 1) * page_size);
+      return (currentData == (undefined || null) ? [] : newData);
+    }
+    else {
+      return (currentData == (undefined || null) ? [] : currentData);
+    }
   }
 
   add = async (data) => {
@@ -28,7 +36,7 @@ export default class MyStorage {
   }
 
   destroy = async (id) => {
-    const currentData = await this.load();
+    const currentData = await this.load(-1);
 
     currentData.forEach((element, index, array) => {
       if(element.id === id) {
