@@ -24,6 +24,7 @@ export default class MainStackNavigation extends React.Component {
     initialRouteName: 'Main',
     navigationOptions: {
       title: "OrangeNotes",
+      headerTintColor: 'white',
       headerStyle: {
         backgroundColor: '#EE7600',
       },

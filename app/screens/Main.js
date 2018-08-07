@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Task from '../components/Task';
 import MyStorage from '../libs/Storage';
-import { Button } from 'react-native-elements'
+import { Button, List, ListItem } from 'react-native-elements';
 
 
 const styles = StyleSheet.create({
@@ -52,35 +52,46 @@ export default class App extends React.Component {
     this.setState({ tasks });
   }
 
+
+  renderSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: "86%",
+          backgroundColor: "#CED0CE",
+          marginLeft: "14%"
+        }}
+      />
+    );
+  };
+
   render() {
     return (
-      <View style={styles.container}>
+      <View>
         <Button
           small
-          buttonStyle={{marginTop:10, backgroundColor: '#EE7600'}}
+          buttonStyle={{marginTop:20, backgroundColor: '#EE7600'}}
           onPress={() => this.props.navigation.navigate('NewTask', {appendToTasks: this.appendToTasks})}
           icon={{name: 'plus', type: 'font-awesome'}}
           title='Nova Nota' />
-        <FlatList
-          style={{flex:1}}
-          extraData={this.state}
-          data={this.state.tasks}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('TaskDetails', {
-                task: item,
-                updateTasks: this.updateTasks
-              })}
-            >
-              <Task
-                index={index}
-                task={item}
-                onPressRating={this.onPressRating}
+        <List>
+          <FlatList
+            extraData={this.state}
+            data={this.state.tasks}
+            ItemSeparatorComponent={this.renderSeparator}
+            renderItem={({ item, index }) => (
+              <ListItem
+                onPress={() => this.props.navigation.navigate('TaskDetails', {
+                  task: item,
+                  updateTasks: this.updateTasks
+                })}
+                title={`${item.title}`}
               />
-            </TouchableOpacity>
-          )}
-          keyExtractor={item => item.title}
-        />
+            )}
+            keyExtractor={item => item.title}
+          />
+        </List>
       </View>
     )
   }
