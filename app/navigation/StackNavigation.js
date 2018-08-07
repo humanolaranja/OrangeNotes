@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  View, Text
+  View, Text, Button, TouchableOpacity
 } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 
@@ -23,16 +23,13 @@ export default class MainStackNavigation extends React.Component {
   }, {
     initialRouteName: 'Main',
     navigationOptions: {
-      header: ( /* Your custom header */
-        <View
-          style={{
-            height: 80,
-            marginTop: 20 /* only for IOS to give StatusBar Space */
-          }}
-        >
-          <Text>This is CustomHeader</Text>
-        </View>
-      )
+      title: "OrangeNotes",
+      headerStyle: {
+        backgroundColor: '#EE7600',
+      },
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      }
     }
   });
 

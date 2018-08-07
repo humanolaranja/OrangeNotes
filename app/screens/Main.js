@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import Task from '../components/Task';
 import MyStorage from '../libs/Storage';
+import { Button } from 'react-native-elements'
 
 
 const styles = StyleSheet.create({
@@ -19,6 +20,10 @@ const styles = StyleSheet.create({
 })
 
 export default class App extends React.Component {
+
+  static navigationOptions = {
+    title: 'OrangeNotes',
+  };
 
   state = {
     tasks: []
@@ -50,15 +55,14 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={{fontSize: 40, paddingBottom: 10, fontWeight: 'bold'}}> Minhas Tarefas </Text>
-        <TouchableOpacity
-          onPress={() => this.props.navigation.navigate('NewTask', {
-            appendToTasks: this.appendToTasks
-          })}
-        >
-          <Text>+</Text>
-        </TouchableOpacity>
+        <Button
+          small
+          buttonStyle={{marginTop:10, backgroundColor: '#EE7600'}}
+          onPress={() => this.props.navigation.navigate('NewTask', {appendToTasks: this.appendToTasks})}
+          icon={{name: 'plus', type: 'font-awesome'}}
+          title='Nova Nota' />
         <FlatList
+          style={{flex:1}}
           extraData={this.state}
           data={this.state.tasks}
           renderItem={({ item, index }) => (

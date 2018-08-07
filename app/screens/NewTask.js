@@ -17,6 +17,11 @@ const styles = StyleSheet.create({
 })
 
 export default class NewTask extends React.Component {
+
+  static navigationOptions = {
+    title: 'Nova Nota',
+  };
+
   state = {
     title: '',
     description: '',
