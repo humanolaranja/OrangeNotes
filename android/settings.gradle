@@ -1,0 +1,3 @@
+rootProject.name = 'OrangeNotes'
+
+include ':app'
