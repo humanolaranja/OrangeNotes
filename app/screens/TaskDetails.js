@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   Text
 } from 'react-native';
+import { Icon, Card } from 'react-native-elements';
 import MyStorage from '../libs/Storage';
 
 
@@ -25,13 +26,17 @@ export default class TaskDetails extends React.Component {
 
     return (
       <View>
-        <TouchableOpacity
-          onPress={this.deleteTask}
-        >
-          <Text style={{ color: 'red' }}>Delete</Text>
-        </TouchableOpacity>
-        <Text>{task.title}</Text>
-        <Text>{task.description}</Text>
+        <Card title={task.title}>
+          <View>
+            <Text>{task.description}</Text>
+          </View>
+        </Card>
+        <Icon
+          raised
+          name='trash'
+          type='font-awesome'
+          color='#f50'
+          onPress={this.deleteTask} />
       </View>
     )
   }

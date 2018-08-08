@@ -56,7 +56,7 @@ export default class App extends React.Component {
   appendToTasks = (task) => {
     const tasks = this.state.data;
     tasks.push(task);
-    this.setState({ data: tasks });
+    this.updateTasks(tasks);
   }
 
   renderSeparator = () => {
@@ -64,9 +64,8 @@ export default class App extends React.Component {
       <View
         style={{
           height: 1,
-          width: "86%",
+          width: "100%",
           backgroundColor: "#CED0CE",
-          marginLeft: "14%"
         }}
       />
     );
@@ -98,7 +97,7 @@ export default class App extends React.Component {
       <Button
       small
       buttonStyle={{marginTop:20, backgroundColor: '#EE7600'}}
-      onPress={() => this.props.navigation.navigate('NewTask', {appendToTasks: this.appendToTasks})}
+      onPress={() => this.props.navigation.navigate('NewTask', {updateTasks: this.updateTasks})}
       icon={{name: 'plus', type: 'font-awesome'}}
       title='Nova Nota' />
       <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
