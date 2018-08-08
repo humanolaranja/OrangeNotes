@@ -8,6 +8,9 @@ import MyStorage from '../libs/Storage';
 
 
 export default class TaskDetails extends React.Component {
+  static navigationOptions = {
+    title: 'Detalhes',
+  };
 
   deleteTask = async () => {
     const task = this.props.navigation.getParam('task', {});
@@ -23,16 +26,12 @@ export default class TaskDetails extends React.Component {
     return (
       <View>
         <TouchableOpacity
-          onPress={() => this.props.navigation.goBack()}
-        >
-          <Text>Voltar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
           onPress={this.deleteTask}
         >
           <Text style={{ color: 'red' }}>Delete</Text>
         </TouchableOpacity>
         <Text>{task.title}</Text>
+        <Text>{task.description}</Text>
       </View>
     )
   }

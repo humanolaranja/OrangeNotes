@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, Text, FlatList, ActivityIndicator } from "react-native";
-import { List, ListItem, SearchBar } from "react-native-elements";
+import { Button, List, ListItem, SearchBar } from 'react-native-elements';
 import MyStorage from '../libs/Storage';
 
 export default class App extends React.Component {
@@ -53,6 +53,12 @@ export default class App extends React.Component {
     this.setState({ data: tasks });
   }
 
+  appendToTasks = (task) => {
+    const tasks = this.state.data;
+    tasks.push(task);
+    this.setState({ data: tasks });
+  }
+
   renderSeparator = () => {
     return (
       <View
@@ -88,12 +94,19 @@ export default class App extends React.Component {
 
   render() {
     return (
+      <View style={[{flex:1, paddingBottom: 75}]}>
+      <Button
+      small
+      buttonStyle={{marginTop:20, backgroundColor: '#EE7600'}}
+      onPress={() => this.props.navigation.navigate('NewTask', {appendToTasks: this.appendToTasks})}
+      icon={{name: 'plus', type: 'font-awesome'}}
+      title='Nova Nota' />
       <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
         <FlatList
           data={this.state.data}
           renderItem={({item}) => (
             <ListItem
-              title={`${item.title}`}
+              title={item.title}
               containerStyle={{ borderBottomWidth: 0 }}
               onPress={() => this.props.navigation.navigate('TaskDetails', {
                 task: item,
@@ -109,6 +122,7 @@ export default class App extends React.Component {
           onEndReachedThreshold={1}
         />
       </List>
+      </View>
     );
   }
 }
