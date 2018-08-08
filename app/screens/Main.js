@@ -1,73 +1,57 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  StyleSheet
-} from 'react-native';
-import Task from '../components/Task';
+import React, { Component } from "react";
+import { View, Text, FlatList, ActivityIndicator } from "react-native";
+import { List, ListItem, SearchBar } from "react-native-elements";
 import MyStorage from '../libs/Storage';
-import { Button, List, ListItem } from 'react-native-elements';
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
-})
 
 export default class App extends React.Component {
 
-  static navigationOptions = {
-    title: 'OrangeNotes',
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: false,
+      data: [],
+      page: 1,
+      error: null,
+    };
+  }
+
+  componentDidMount() {
+    this.makeRemoteRequest();
+  }
+
+  makeRemoteRequest = () => {
+    const { page } = this.state;
+    this.setState({ loading: true });
+
+    const tasks = new MyStorage().load(page)
+      .then(res => {
+        this.setState({
+          data: page === 1 ? res : [...this.state.data, ...res],
+          error: res.error || null,
+          loading: false,
+        });
+      })
+      .catch(error => {
+        console.error(error);
+        this.setState({ error, loading: false });
+      });
   };
 
-  state = {
-    tasks: [],
-    page: 1,
-    flag: false
-  }
-
-  async componentWillMount() {
-    const tasks = await new MyStorage().load(this.state.page);
-    this.setState({ tasks: tasks });
-  }
-
-  onPressRating = (index, value) => {
-    const tasks = this.state.tasks;
-
-    tasks[index].rating = value;
-
-    this.setState({ tasks });
-  }
-
-  appendToTasks = (task) => {
-    const tasks = this.state.tasks;
-    tasks.push(task);
-    this.setState({ tasks });
-  }
+  handleLoadMore = () => {
+    this.setState(
+      {
+        page: this.state.page + 1
+      },
+      () => {
+        this.makeRemoteRequest();
+      }
+    );
+  };
 
   updateTasks = (tasks) => {
-    this.setState({ tasks });
+    this.setState({ data: tasks });
   }
-
-  handleLoadMore = async () => {
-    if(!this.state.flag) {
-      const size = await new MyStorage().load(-1);
-      var number = size.length;
-      console.warn(number);
-      this.setState({flag: true});
-      this.setState({page: this.state.page + 1});
-      console.warn(this.state.page);
-      const tasks = await new MyStorage().load(this.state.page);
-      console.warn(tasks);
-      this.setState({ tasks: tasks, flag: false });
-    }
-  }
-
 
   renderSeparator = () => {
     return (
@@ -82,35 +66,49 @@ export default class App extends React.Component {
     );
   };
 
+  renderHeader = () => {
+    return <SearchBar placeholder="Buscar..." lightTheme round />;
+  };
+
+  renderFooter = () => {
+    if (!this.state.loading) return null;
+
+    return (
+      <View
+        style={{
+          paddingVertical: 20,
+          borderTopWidth: 1,
+          borderColor: "#CED0CE"
+        }}
+      >
+        <ActivityIndicator animating size="large" />
+      </View>
+    );
+  };
+
   render() {
     return (
-      <View>
-        <Button
-          small
-          buttonStyle={{marginTop:20, backgroundColor: '#EE7600'}}
-          onPress={() => this.props.navigation.navigate('NewTask', {appendToTasks: this.appendToTasks})}
-          icon={{name: 'plus', type: 'font-awesome'}}
-          title='Nova Nota' />
-        <List>
-          <FlatList
-            extraData={this.state}
-            data={this.state.tasks}
-            ItemSeparatorComponent={this.renderSeparator}
-            renderItem={({ item, index }) => (
-              <ListItem
-                onPress={() => this.props.navigation.navigate('TaskDetails', {
-                  task: item,
-                  updateTasks: this.updateTasks
-                })}
-                title={`${item.title}`}
-              />
-            )}
-            keyExtractor={item => item.title}
-            onEndReached={this.handleLoadMore}
-            onEndReachedThreshold={1}
-          />
-        </List>
-      </View>
-    )
+      <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
+        <FlatList
+          data={this.state.data}
+          renderItem={({item}) => (
+            <ListItem
+              title={`${item.title}`}
+              containerStyle={{ borderBottomWidth: 0 }}
+              onPress={() => this.props.navigation.navigate('TaskDetails', {
+                task: item,
+                updateTasks: this.updateTasks
+              })}
+            />
+          )}
+          keyExtractor={item => item.title}
+          ItemSeparatorComponent={this.renderSeparator}
+          ListHeaderComponent={this.renderHeader}
+          ListFooterComponent={this.renderFooter}
+          onEndReached={this.handleLoadMore}
+          onEndReachedThreshold={1}
+        />
+      </List>
+    );
   }
 }
