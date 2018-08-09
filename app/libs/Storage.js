@@ -49,7 +49,17 @@ export default class MyStorage {
     return currentData;
   }
 
-  update = async () => {
-    // TODO
+  update = async (id, title) => {
+    const currentData = await this.load(-1);
+
+    currentData.forEach((element, index, array) => {
+      if(element.id === id) {
+        element.title = title;
+      }
+    });
+
+    await AsyncStorage.setItem('storedTasks', JSON.stringify(currentData))
+
+    return currentData;
   }
 }

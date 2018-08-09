@@ -21,6 +21,14 @@ export default class TaskDetails extends React.Component {
     this.props.navigation.goBack();
   }
 
+  updateTest = async () => {
+    const task = this.props.navigation.getParam('task', {});
+    const updateTasks = this.props.navigation.getParam('updateTasks');
+    const tasks = await new MyStorage().update(task.id, 'DEU CERTO');
+    updateTasks(tasks);
+    this.props.navigation.goBack();
+  }
+
   render() {
     const task = this.props.navigation.getParam('task', {});
 
@@ -37,6 +45,12 @@ export default class TaskDetails extends React.Component {
           type='font-awesome'
           color='#f50'
           onPress={this.deleteTask} />
+        <Icon
+          raised
+          name='edit'
+          type='font-awesome'
+          color='#000000'
+          onPress={this.updateTest} />
       </View>
     )
   }
