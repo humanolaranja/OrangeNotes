@@ -2,13 +2,27 @@ import React from 'react';
 import {
   View,
   TouchableOpacity,
-  Text
+  Text,
+  TextInput,
+  StyleSheet
 } from 'react-native';
 import { Icon, Card } from 'react-native-elements';
 import MyStorage from '../libs/Storage';
 
+const styles = StyleSheet.create({
+  input: {
+    borderWidth: 1,
+    padding: 5
+  }
+})
 
 export default class TaskDetails extends React.Component {
+  constructor(props) {
+    super(props);
+    const task = this.props.navigation.getParam('task', {});
+    this.state = ({title: task.title, description: task.description, rating: task.rating});
+  }
+
   static navigationOptions = {
     title: 'Detalhes',
   };
@@ -24,7 +38,10 @@ export default class TaskDetails extends React.Component {
   updateTest = async () => {
     const task = this.props.navigation.getParam('task', {});
     const updateTasks = this.props.navigation.getParam('updateTasks');
-    const tasks = await new MyStorage().update(task.id, 'DEU CERTO');
+    const t = this.state.title;
+    const d = this.state.description;
+    const r = this.state.rating;
+    const tasks = await new MyStorage().update(task.id, t, d, r);
     updateTasks(tasks);
     this.props.navigation.goBack();
   }
@@ -34,9 +51,22 @@ export default class TaskDetails extends React.Component {
 
     return (
       <View>
-        <Card title={task.title}>
+        <Card title="Caso queira, edite os dados e clique em salvar">
           <View>
-            <Text>{task.description}</Text>
+          <Text>Titulo</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Title"
+            value={this.state.title}
+            onChangeText={(text) => this.setState({ title: text })}
+          />
+          <Text>Descrição</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Descrição"
+            value={this.state.description}
+            onChangeText={(text) => this.setState({ description: text })}
+          />
           </View>
         </Card>
         <Icon
@@ -47,9 +77,9 @@ export default class TaskDetails extends React.Component {
           onPress={this.deleteTask} />
         <Icon
           raised
-          name='edit'
+          name='save'
           type='font-awesome'
-          color='#000000'
+          color='#000'
           onPress={this.updateTest} />
       </View>
     )

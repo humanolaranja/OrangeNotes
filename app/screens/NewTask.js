@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text
 } from 'react-native';
+import { Icon, Card } from 'react-native-elements';
 import Rating from '../components/Rating';
 import MyStorage from '../libs/Storage';
 
@@ -40,12 +41,6 @@ export default class NewTask extends React.Component {
   render () {
     return (
       <View>
-      <Text style={{ fontSize: 30 }}>New Task</Text>
-        <TouchableOpacity
-        onPress={() => this.props.navigation.goBack()}
-        >
-          <Text>Back</Text>
-        </TouchableOpacity>
         <View style={{ padding: 20 }}>
           <Text>Title</Text>
           <TextInput
@@ -63,11 +58,12 @@ export default class NewTask extends React.Component {
             ratValue={this.state.rating}
             onPressRating={(index, value) => this.setState({ rating: value })}
           />
-          <TouchableOpacity
-            onPress={this.saveTask}
-          >
-            <Text>Save</Text>
-          </TouchableOpacity>
+          <Icon
+            raised
+            name='save'
+            type='font-awesome'
+            color='#000'
+            onPress={this.saveTask} />
         </View>
       </View>
     )

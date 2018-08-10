@@ -49,12 +49,14 @@ export default class MyStorage {
     return currentData;
   }
 
-  update = async (id, title) => {
+  update = async (id, title, description, rating) => {
     const currentData = await this.load(-1);
 
     currentData.forEach((element, index, array) => {
       if(element.id === id) {
         element.title = title;
+        element.description = description;
+        element.rating = rating;
       }
     });
 
