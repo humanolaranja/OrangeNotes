@@ -59,7 +59,7 @@ export default class App extends React.Component {
     const formatQuery = text.toLowerCase();
     if(formatQuery == ''){
       this.setState({ page: 1 });
-      this.handleLoadMore;
+      this.makeRemoteRequest();
     }
     else {
       this.setState({ query: formatQuery });
