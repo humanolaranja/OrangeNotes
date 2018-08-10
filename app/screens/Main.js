@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { View, Text, FlatList, ActivityIndicator } from "react-native";
 import { Button, List, ListItem, SearchBar } from 'react-native-elements';
 import MyStorage from '../libs/Storage';
+import _ from 'lodash';
 
 export default class App extends React.Component {
 
@@ -13,6 +14,8 @@ export default class App extends React.Component {
       data: [],
       page: 1,
       error: null,
+      query: '',
+      fullData: [],
     };
   }
 
@@ -22,9 +25,10 @@ export default class App extends React.Component {
 
   makeRemoteRequest = () => {
     const { page } = this.state;
+    const { query } = this.state;
     this.setState({ loading: true });
 
-    const tasks = new MyStorage().load(page)
+    const tasks = new MyStorage().load(page, query)
       .then(res => {
         this.setState({
           data: page === 1 ? res : [...this.state.data, ...res],
@@ -39,15 +43,29 @@ export default class App extends React.Component {
   };
 
   handleLoadMore = () => {
-    this.setState(
-      {
-        page: this.state.page + 1
-      },
-      () => {
-        this.makeRemoteRequest();
-      }
-    );
+    if(this.state.query == ''){
+      this.setState(
+        {
+          page: this.state.page + 1
+        },
+        () => {
+          this.makeRemoteRequest();
+        }
+      );
+    }
   };
+
+  handleSearch = (text) => {
+    const formatQuery = text.toLowerCase();
+    if(formatQuery == ''){
+      this.setState({ page: 1 });
+      this.handleLoadMore;
+    }
+    else {
+      this.setState({ query: formatQuery });
+      this.makeRemoteRequest();
+    }
+  }
 
   updateTasks = (tasks) => {
     this.setState({ data: tasks });
@@ -72,7 +90,7 @@ export default class App extends React.Component {
   };
 
   renderHeader = () => {
-    return <SearchBar placeholder="Buscar..." lightTheme round />;
+    return <SearchBar placeholder="Buscar..." lightTheme round onChangeText={this.handleSearch} />;
   };
 
   renderFooter = () => {

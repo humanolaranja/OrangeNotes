@@ -1,11 +1,23 @@
 import { AsyncStorage } from 'react-native';
 
 export default class MyStorage {
-  load = async (page_number) => {
+  load = async (page_number, query = '') => {
     const currentData = JSON.parse(
       await AsyncStorage.getItem('storedTasks')
     );
-    if(page_number > 0) {
+    const filtered = [];
+    if(query != '') {
+      currentData.forEach((element, index, array) => {
+        const search = element.title.toLowerCase();
+        if(search.indexOf(query) > -1) {
+          if(filtered.indexOf(query) < 0) {
+            filtered.push(element);
+          }
+        }
+      });
+      return (filtered == (undefined || null) ? [] : filtered);
+    }
+    else if(page_number > 0) {
       page_size = 15;
       --page_number;
       var newData = currentData.slice(page_number * page_size, (page_number + 1) * page_size);
