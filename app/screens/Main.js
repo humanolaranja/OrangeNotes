@@ -70,6 +70,10 @@ export default class App extends React.Component {
     this.setState({ data: tasks });
   }
 
+  resetPage = () => {
+    this.setState({ page: 1 });
+  }
+
   appendToTasks = (task) => {
     const tasks = this.state.data;
     tasks.push(task);
@@ -115,7 +119,7 @@ export default class App extends React.Component {
       small
       buttonStyle={{marginTop:20, backgroundColor: '#EE7600'}}
       onPress={() => this.props.navigation.navigate(
-        'NewTask', {updateTasks: this.updateTasks}
+        'NewTask', {updateTasks: this.updateTasks, resetPage: this.resetPage}
       )}
       icon={{name: 'plus', type: 'font-awesome'}}
       title='Nova Nota' />

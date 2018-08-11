@@ -39,11 +39,13 @@ export default class TaskDetails extends React.Component {
   updateTest = async () => {
     const task = this.props.navigation.getParam('task', {});
     const updateTasks = this.props.navigation.getParam('updateTasks');
+    const resetPage = this.props.navigation.getParam('resetPage');
     const t = this.state.title;
     const d = this.state.description;
     const r = this.state.rating;
     const tasks = await new MyStorage().update(task.id, t, d, r);
     updateTasks(tasks);
+    resetPage();
     this.props.navigation.goBack();
   }
 
