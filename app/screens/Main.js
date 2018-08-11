@@ -29,6 +29,11 @@ export default class App extends React.Component {
 
     const tasks = new MyStorage().load(page, query)
       .then(res => {
+        if(query != ''){
+          this.setState({
+            data: []
+          });
+        }
         this.setState({
           data: page === 1 ? res : [...this.state.data, ...res],
           error: res.error || null,
