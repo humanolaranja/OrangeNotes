@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Icon, Card } from 'react-native-elements';
 import MyStorage from '../libs/Storage';
+import Rating from './../components/Rating';
 
 const styles = StyleSheet.create({
   input: {
@@ -46,8 +47,13 @@ export default class TaskDetails extends React.Component {
     this.props.navigation.goBack();
   }
 
+  onPressRating = (index, value) => {
+    this.setState({ rating: value });
+  }
+
   render() {
     const task = this.props.navigation.getParam('task', {});
+    const index = this.props.navigation.getParam('index', {});
 
     return (
       <View>
@@ -66,6 +72,11 @@ export default class TaskDetails extends React.Component {
             placeholder="Descrição"
             value={this.state.description}
             onChangeText={(text) => this.setState({ description: text })}
+          />
+          <Rating
+            taskIndex={index}
+            ratValue={this.state.rating}
+            onPressRating={(index, value) => this.onPressRating(index, value)}
           />
           </View>
         </Card>

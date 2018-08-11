@@ -20,7 +20,8 @@ export default class MyStorage {
     else if(page_number > 0) {
       page_size = 15;
       --page_number;
-      var newData = currentData.slice(page_number * page_size, (page_number + 1) * page_size);
+      var newData = currentData.slice(page_number * page_size,
+                                                (page_number + 1) * page_size);
       return (newData == (undefined || null) ? [] : newData);
     }
     else {

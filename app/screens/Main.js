@@ -15,7 +15,6 @@ export default class App extends React.Component {
       page: 1,
       error: null,
       query: '',
-      fullData: [],
     };
   }
 
@@ -115,18 +114,21 @@ export default class App extends React.Component {
       <Button
       small
       buttonStyle={{marginTop:20, backgroundColor: '#EE7600'}}
-      onPress={() => this.props.navigation.navigate('NewTask', {updateTasks: this.updateTasks})}
+      onPress={() => this.props.navigation.navigate(
+        'NewTask', {updateTasks: this.updateTasks}
+      )}
       icon={{name: 'plus', type: 'font-awesome'}}
       title='Nova Nota' />
       <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
         <FlatList
           data={this.state.data}
-          renderItem={({item}) => (
+          renderItem={({ item, index }) => (
             <ListItem
               title={item.title}
               containerStyle={{ borderBottomWidth: 0 }}
               onPress={() => this.props.navigation.navigate('TaskDetails', {
                 task: item,
+                index: index,
                 updateTasks: this.updateTasks
               })}
             />

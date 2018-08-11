@@ -12,7 +12,6 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 50,
     borderWidth: 3,
-    borderColor: 'green'
   }
 })
 
@@ -30,7 +29,7 @@ export default class Rating extends React.Component {
     return result.map((val, i) => {
       return (
         <TouchableOpacity key={i} onPress={() => this.props.onPressRating(this.props.taskIndex, i + 1)}>
-          <View style={[styles.circle, val === 1 && {backgroundColor: 'green'}]}/>
+          <View style={[styles.circle, val === 1 && {backgroundColor: 'orange'}]}/>
         </TouchableOpacity>
       )
     });
